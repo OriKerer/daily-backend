@@ -5,7 +5,7 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    bucket = var.gcs_backend_bucket
+    bucket = "daily-tfstate"
     prefix = "terraform/state"
   }
 }

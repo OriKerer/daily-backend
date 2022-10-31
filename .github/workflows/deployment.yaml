@@ -12,7 +12,6 @@ permissions:
 env:
   TF_VAR_region: us-east1
   TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
-  TF_VAR_gcs_backend_bucket: ${{ secrets.GCS_TF_BACKEND }}
   TF_VAR_artifact_repository: container-images
   daily_image_name: daily
 
@@ -50,12 +49,14 @@ jobs:
       - name: Terraform validate
         id: validate
         run: terraform validate -no-color
+        working-directory: terraform/
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
         continue-on-error: true
+        working-directory: terraform/
 
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'

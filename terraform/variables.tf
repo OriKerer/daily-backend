@@ -18,9 +18,3 @@ variable "daily_image_url" {
   type        = string
   description = "The url to daily container image"
 }
-
-variable "gcs_backend_bucket" {
-  type        = string
-  sensitive   = true
-  description = "The name of the bucket to be used as a terraform backend for remote state"
-}
