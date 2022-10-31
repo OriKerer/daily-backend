@@ -22,10 +22,3 @@ resource "google_cloud_run_service" "daily" {
     latest_revision = true
   }
 }
-
-resource "google_artifact_registry_repository" "container-images" {
-  location      = var.region
-  repository_id = var.artifact_repository
-  description   = "Container images for daily"
-  format        = "DOCKER"
-}
