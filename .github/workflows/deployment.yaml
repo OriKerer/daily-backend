@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Set environment variables for jobs
-        run: echo "TF_VAR_daily_image_url=${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}/${{ env.daily_image_name}}"
+        run: echo "TF_VAR_daily_image_url=${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}/${{ env.daily_image_name}}" >> $GITHUB_ENV
 
       - name: Authenticate to Google Cloud
         if: github.event_name != 'pull_request'
