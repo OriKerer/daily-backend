@@ -10,12 +10,14 @@ env:
   TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
   TF_VAR_gcs_backend_bucket: ${{ secrets.GCS_TF_BACKEND }}
   TF_VAR_artifact_repository: container-images
-  artifact_repository_url: ${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}
-  IMAGE_NAME: ${{ env.artifact_repository_url }}/daily
+  daily_image_name: daily
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_daily_image_url: ${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}/${{ env.daily_image_name}}
+
 
     steps:
       - name: Checkout
@@ -86,6 +88,11 @@ jobs:
   
   push-container-image:
     runs-on: ubuntu-latest
+
+    env:
+      artifact_repository_url: ${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}
+      daily_image_url: ${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}/${{ env.daily_image_name}}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -112,12 +119,12 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.daily_image_url }}:latest
 
       - name: Prune untagged images
         if: github.event_name != 'pull_request'
         run: |
           gcloud artifacts docker images list ${{ env.artifact_repository_url }} \
           --include-tags  --filter='-tags:*' --format='get(DIGEST)' \
-          | awk '{print "${{ env.IMAGE_NAME }}@" $1}' \
+          | awk '{print "${{ env.daily_image_url }}@" $1}' \
           | xargs -L 1  gcloud artifacts docker images delete
