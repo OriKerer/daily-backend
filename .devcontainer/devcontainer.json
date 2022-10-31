@@ -30,7 +30,10 @@
 			"extensions": [
 				"golang.Go",
 				"hashicorp.terraform",
-				"streetsidesoftware.code-spell-checker"
+				"streetsidesoftware.code-spell-checker",
+				"Gruntfuggly.todo-tree",
+				"eamodio.gitlens",
+				"redhat.vscode-yaml"
 			]
 		}
 	},
