@@ -1,11 +1,11 @@
-resource "google_cloud_run_service" "default" {
-  name     = "cloudrun-srv"
-  location = "us-central1"
+resource "google_cloud_run_service" "daily" {
+  name     = "daily"
+  location = var.region
 
   template {
     spec {
       containers {
-        image = "us-docker.pkg.dev/cloudrun/container/hello"
+        image = var.daily_image_url
       }
     }
 

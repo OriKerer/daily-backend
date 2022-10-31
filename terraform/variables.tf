@@ -14,6 +14,11 @@ variable "artifact_repository" {
   description = "The name of the artifact to be used for storing container images"
 }
 
+variable "daily_image_url" {
+  type        = string
+  description = "The url to daily container image"
+}
+
 variable "gcs_backend_bucket" {
   type        = string
   sensitive   = true
