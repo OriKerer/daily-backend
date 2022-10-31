@@ -15,13 +15,13 @@ env:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-    env:
-      TF_VAR_daily_image_url: ${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}/${{ env.daily_image_name}}
-
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      
+      - name: Set environment variables for jobs
+        run: echo "TF_VAR_daily_image_url=${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}/${{ env.daily_image_name}}"
 
       - name: Authenticate to Google Cloud
         if: github.event_name != 'pull_request'
@@ -89,10 +89,6 @@ jobs:
   push-container-image:
     runs-on: ubuntu-latest
 
-    env:
-      artifact_repository_url: ${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}
-      daily_image_url: ${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}/${{ env.daily_image_name}}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -119,12 +115,12 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.daily_image_url }}:latest
+          tags: ${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}/${{ env.daily_image_name}}:latest
 
       - name: Prune untagged images
         if: github.event_name != 'pull_request'
         run: |
-          gcloud artifacts docker images list ${{ env.artifact_repository_url }} \
+          gcloud artifacts docker images list ${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }} \
           --include-tags  --filter='-tags:*' --format='get(DIGEST)' \
-          | awk '{print "${{ env.daily_image_url }}@" $1}' \
+          | awk '{print "${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository }}/${{ env.daily_image_name}}@" $1}' \
           | xargs -L 1  gcloud artifacts docker images delete
