@@ -30,22 +30,19 @@ jobs:
           "TF_VAR_daily_image_url=${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.artifact_repository_name }}/${{ env.daily_image_name }}:latest" \
           >> $GITHUB_ENV
 
-      - name: Authenticate to Google Cloud
-        if: github.event_name != 'pull_request'
-        uses: google-github-actions/auth@v0
-        with:
-          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.SERVICE_ACCOUNT }}
-      - name: Set up Cloud SDK
-        if: github.event_name != 'pull_request'
-        uses: google-github-actions/setup-gcloud@v0
-
       - name: Get latest image digest
         run: |
           gcloud artifacts docker images list ${{ env.TF_VAR_daily_image_url }} \
           --include-tags  --filter='tags: latest' --format='get(DIGEST)' \
           | awk '{print "TF_VAR_latest_daily_image_digest=" $1}' \
           | xargs --no-run-if-empty -L 1  echo >> $GITHUB_ENV
+
+      - name: Authenticate to Google Cloud
+        if: github.event_name != 'pull_request'
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
