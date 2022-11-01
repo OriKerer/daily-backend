@@ -13,3 +13,7 @@ variable "daily_image_url" {
   type        = string
   description = "The url to daily container image"
 }
+
+variable "revision_name" {
+  type = string
+}
