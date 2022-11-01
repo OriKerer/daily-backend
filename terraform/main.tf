@@ -8,15 +8,15 @@ resource "google_cloud_run_service" "daily" {
         image = var.daily_image_url
         resources {
           limits = {
-            "cpu" = "80m"
+            "cpu"    = "80m"
             "memory" = "128M"
           }
         }
       }
       container_concurrency = "1000"
-      timeout_seconds = "3600"
+      timeout_seconds       = "3600"
     }
-    
+
 
     metadata {
       annotations = {
