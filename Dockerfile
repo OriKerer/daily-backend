@@ -1,4 +1,4 @@
-FROM golang:1.19 AS build
+FROM golang:1.19-alpine AS build
 
 WORKDIR /src
 
@@ -11,7 +11,7 @@ RUN go build -mod=readonly -v -o /app
 
 
 # Now create separate deployment image
-FROM debian:11-slim
+FROM alpine
 
 WORKDIR /daily
 COPY --from=build /app ./app
