@@ -9,7 +9,7 @@ resource "google_cloud_run_service" "daily" {
         resources {
           limits = {
             "cpu"    = "80m"
-            "memory" = "128M"
+            "memory" = "128Mi"
           }
         }
       }
