@@ -139,4 +139,4 @@ jobs:
           gcloud artifacts docker images list ${{ env.repository_url }} \
           --include-tags  --filter='-tags:*' --format='get(DIGEST)' \
           | awk '{print "${{ env.repository_url }}/${{ env.daily_image_name}}@" $1}' \
-          | xargs --no-run-if-empty -L 1  gcloud artifacts docker images delete
+          | xargs --no-run-if-empty -L 1  gcloud artifacts docker images delete --quiet
