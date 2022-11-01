@@ -13,3 +13,8 @@ variable "daily_image_url" {
   type        = string
   description = "The url to daily container image"
 }
+
+variable "latest_daily_image_digest" {
+  type        = string
+  description = "The digest of the latest image"
+}

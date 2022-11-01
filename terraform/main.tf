@@ -19,10 +19,12 @@ resource "google_cloud_run_service" "daily" {
 
 
     metadata {
+      resource_version = var.latest_daily_image_digest
       annotations = {
         "autoscaling.knative.dev/maxScale" = "1"
         "autoscaling.knative.dev/minScale" = "0"
       }
+
     }
   }
 
