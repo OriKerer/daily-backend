@@ -43,6 +43,9 @@ data "google_iam_policy" "noauth" {
 }
 
 resource "google_cloud_run_service_iam_policy" "noauth" {
+  depends_on = [
+    google_cloud_run_service.daily
+  ]
   location = google_cloud_run_service.daily.location
   project  = google_cloud_run_service.daily.project
   service  = google_cloud_run_service.daily.name
