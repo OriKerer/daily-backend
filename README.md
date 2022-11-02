@@ -1,5 +1,6 @@
 # ⛅Daily
 [![GCP Deployment](https://github.com/OriKerer/daily/actions/workflows/deployment.yaml/badge.svg)](https://github.com/OriKerer/daily/actions/workflows/deployment.yaml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/orikerer/daily)](https://goreportcard.com/report/github.com/orikerer/daily)
 ## Infrastructure Prerequisites
 
 Before using the terraform create the following resources
