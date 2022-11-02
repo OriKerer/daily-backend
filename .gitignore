@@ -23,6 +23,7 @@ go.work
 ##########
 # Terraform
 # Local .terraform directories
+*.lock.hcl
 **/.terraform/*
 # .tfstate files
 *.tfstate
