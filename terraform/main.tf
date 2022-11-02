@@ -12,6 +12,10 @@ resource "google_cloud_run_service" "daily" {
             "memory" = "128Mi"
           }
         }
+        env {
+          GIN_MODE = release
+          PORT     = 8080
+        }
       }
       container_concurrency = "1000"
       timeout_seconds       = "3600"
