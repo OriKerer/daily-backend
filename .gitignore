@@ -6,6 +6,7 @@
 ##########
 # Golang
 # Binaries for programs and plugins
+__debug_bin
 *.exe
 *.exe~
 *.dll
