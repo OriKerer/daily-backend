@@ -33,7 +33,8 @@
 				"streetsidesoftware.code-spell-checker",
 				"Gruntfuggly.todo-tree",
 				"eamodio.gitlens",
-				"redhat.vscode-yaml"
+				"redhat.vscode-yaml",
+				"yzhang.markdown-all-in-one"
 			]
 		}
 	},
