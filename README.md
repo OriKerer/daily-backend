@@ -1,5 +1,5 @@
 # Daily
-
+[![GCP Deployment](https://github.com/OriKerer/daily/actions/workflows/deployment.yaml/badge.svg)](https://github.com/OriKerer/daily/actions/workflows/deployment.yaml)
 ## Infrastructure Prerequisites
 
 Before using the terraform create the following resources

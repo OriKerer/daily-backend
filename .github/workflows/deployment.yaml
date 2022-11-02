@@ -1,4 +1,4 @@
-name: "Daily Deployment"
+name: "GCP Deployment ☁️ "
 
 on:
   push:
