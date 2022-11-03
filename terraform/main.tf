@@ -1,56 +1,62 @@
-resource "google_cloud_run_service" "daily" {
-  name     = "daily"
-  location = var.region
+module "gce-container" {
+  source  = "terraform-google-modules/container-vm/google"
+  version = "~> 3.0"
 
-  template {
-    spec {
-      containers {
-        image = var.daily_image_url
-        resources {
-          limits = {
-            "cpu"    = "80m"
-            "memory" = "128Mi"
-          }
-        }
-        env {
-          name  = "GIN_MODE"
-          value = "release"
-        }
-
+  container = {
+    image = var.daily_image_url
+    env = [
+      {
+        name  = "GIN_MODE"
+        value = "release"
       }
-      container_concurrency = "1000"
-      timeout_seconds       = "3600"
-    }
-
-
-    metadata {
-      name = var.revision_name
-      annotations = {
-        "autoscaling.knative.dev/maxScale" = "1"
-        "autoscaling.knative.dev/minScale" = "0"
-      }
-    }
-  }
-
-  traffic {
-    percent         = 100
-    latest_revision = true
-  }
-}
-
-data "google_iam_policy" "noauth" {
-  binding {
-    role = "roles/run.invoker"
-    members = [
-      "allUsers",
     ]
   }
+
+  restart_policy = "always"
 }
 
-resource "google_cloud_run_service_iam_policy" "noauth" {
-  location = google_cloud_run_service.daily.location
-  project  = google_cloud_run_service.daily.project
-  service  = google_cloud_run_service.daily.name
+resource "google_compute_instance" "default" {
+  name         = "daily"
+  machine_type = "e2-micro"
+  zone         = var.zone
 
-  policy_data = data.google_iam_policy.noauth.policy_data
+  boot_disk {
+    initialize_params {
+      image = module.gce-container.source_image
+      labels = {
+        my_label = "value"
+      }
+    }
+  }
+
+  metadata = {
+    gce-container-declaration = module.gce-container.metadata_value
+    google-logging-enabled    = "true"
+    google-monitoring-enabled = "true"
+  }
+
+  labels = {
+    container-vm = module.gce-container.vm_container_label
+  }
+  allow_stopping_for_update = true
+  description               = "VM to Host Daily container"
+
+  network_interface { #TODO: VPC network
+    network = "default"
+
+    access_config {
+      network_tier = "STANDARD"
+    }
+  }
+
+
+  resource "google_service_account" "default" { # TODO: Service account
+    account_id   = "service_account_id"
+    display_name = "Service Account"
+  }
+  service_account {
+    # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
+    email  = google_service_account.default.email
+    scopes = ["cloud-platform"]
+  }
 }
