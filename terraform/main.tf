@@ -13,9 +13,14 @@ resource "google_cloud_run_service" "daily" {
           }
         }
         env {
-          GIN_MODE = release
-          PORT     = 8080
+          name = "PORT"
+          value = "8080"
         }
+        env {
+          name = "GIN_MODE"
+          value = "release"
+        }
+
       }
       container_concurrency = "1000"
       timeout_seconds       = "3600"
