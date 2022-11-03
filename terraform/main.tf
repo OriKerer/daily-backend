@@ -13,10 +13,6 @@ resource "google_cloud_run_service" "daily" {
           }
         }
         env {
-          name  = "PORT"
-          value = "8080"
-        }
-        env {
           name  = "GIN_MODE"
           value = "release"
         }
