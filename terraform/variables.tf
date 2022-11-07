@@ -19,6 +19,7 @@ variable "daily_image_url" {
   description = "The url to daily container image"
 }
 
-variable "revision_name" {
-  type = string
-}
+#TODO: delete?
+# variable "revision_name" {
+#   type = string
+# }
