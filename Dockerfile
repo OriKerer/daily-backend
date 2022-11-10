@@ -13,6 +13,9 @@ RUN go build -mod=readonly -v -o /app
 # Now create separate deployment image
 FROM alpine
 
+RUN adduser --disabled-password go
+USER go
+
 WORKDIR /daily
 COPY --from=build /app ./app
 
