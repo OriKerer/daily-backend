@@ -3,5 +3,8 @@
         "buildx",
         "gcloud"
     ],
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "cSpell.enableFiletypes": [
+        "terraform"
+    ]
 }
