@@ -19,6 +19,11 @@ variable "daily_image_url" {
   description = "The url to daily container image"
 }
 
+variable "artifact_repository_name" {
+  type        = string
+  description = "The name of the artifact repository with daily image"
+}
+
 #TODO: delete?
 # variable "revision_name" {
 #   type = string

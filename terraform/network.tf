@@ -1,21 +1,20 @@
-
-resource "google_compute_network" "daily-network" {
+resource "google_compute_network" "daily_network" {
   name                    = "daily-network"
   auto_create_subnetworks = false
 }
 
-resource "google_compute_subnetwork" "daily-subnet" {
+resource "google_compute_subnetwork" "daily_subnet" {
   name                     = "daily-subnet"
   ip_cidr_range            = "10.2.0.0/16" # TODO: decide cidr block
-  network                  = google_compute_network.daily-network.id
+  network                  = google_compute_network.daily_network.id
   private_ip_google_access = true
 }
 
-resource "google_compute_firewall" "daily-http" {
+resource "google_compute_firewall" "http_server" {
   # TODO: disable after testing
-  name        = "daily-http"
-  network     = google_compute_network.daily-network.self_link
-  description = "Allow HTTP traffic for daily backend APIs"
+  name        = "http-server"
+  network     = google_compute_network.daily_network.self_link
+  description = "Allow HTTP traffic"
 
   allow {
     protocol = "tcp"
@@ -23,13 +22,13 @@ resource "google_compute_firewall" "daily-http" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["daily-api"]
+  target_tags   = ["http-server"]
 }
 
-resource "google_compute_firewall" "daily-https" {
-  name        = "daily-https"
-  network     = google_compute_network.daily-network.self_link
-  description = "Allow HTTPs traffic for daily backend APIs"
+resource "google_compute_firewall" "https_server" {
+  name        = "https-server"
+  network     = google_compute_network.daily_network.self_link
+  description = "Allow HTTPs traffic"
 
   allow {
     protocol = "tcp"
@@ -37,12 +36,12 @@ resource "google_compute_firewall" "daily-https" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["daily-api"]
+  target_tags   = ["https-server"]
 }
 
-resource "google_compute_firewall" "iap-ssh" {
+resource "google_compute_firewall" "iap_ssh" {
   name        = "iap-ssh"
-  network     = google_compute_network.daily-network.self_link
+  network     = google_compute_network.daily_network.self_link
   description = "Allow ssh traffic for daily instance from IAP IPs range"
 
   allow {
@@ -51,10 +50,10 @@ resource "google_compute_firewall" "iap-ssh" {
   }
 
   source_ranges = ["35.235.240.0/20"]
-  target_tags   = ["daily-api"]
+  target_tags   = ["http-server", "https-server"]
 }
 
-resource "google_compute_address" "daily-gce-external-ip" {
+resource "google_compute_address" "daily_gce_external_ip" {
   name         = "daily-gce-external-ip"
   address_type = "EXTERNAL"
 }
