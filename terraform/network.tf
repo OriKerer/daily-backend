@@ -39,3 +39,22 @@ resource "google_compute_firewall" "daily-https" {
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["daily-api"]
 }
+
+resource "google_compute_firewall" "iap-ssh" {
+  name        = "iap-ssh"
+  network     = google_compute_network.daily-network.self_link
+  description = "Allow ssh traffic for daily instance from IAP IPs range"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_ranges = ["35.235.240.0/20"]
+  target_tags   = ["daily-api"]
+}
+
+resource "google_compute_address" "daily-gce-external-ip" {
+  name         = "daily-gce-external-ip"
+  address_type = "EXTERNAL"
+}
