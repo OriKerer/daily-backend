@@ -40,6 +40,7 @@ resource "google_compute_instance" "daily" {
 
   labels = {
     container-vm = module.gce_container.vm_container_label
+    billing      = daily-gce-instance
   }
 
   network_interface {
