@@ -40,7 +40,7 @@ resource "google_compute_instance" "daily" {
 
   labels = {
     container-vm = module.gce_container.vm_container_label
-    billing      = daily-gce-instance
+    billing      = "daily-gce-instance"
   }
 
   network_interface {
@@ -140,3 +140,7 @@ resource "google_project_iam_binding" "daily_monitoring_metric_writer" {
     format("serviceAccount:%s", google_service_account.daily_gce.email),
   ]
 }
+
+#TODO: uptime checks 
+#TODO: monitoring alerts
+#TODO: monitoring dashboard
