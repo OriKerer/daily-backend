@@ -1,0 +1,1 @@
+docker run --restart ${RESTART_POLICY} -p 80:8080 ${IMAGE}

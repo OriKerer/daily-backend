@@ -13,8 +13,14 @@ RUN go build -mod=readonly -v -o /app
 # Now create separate deployment image
 FROM alpine
 
+RUN adduser --disabled-password go
+USER go
+
 WORKDIR /daily
 COPY --from=build /app ./app
 
-EXPOSE 8080
+# TODO: remove gttp port after testing
+EXPOSE 80 
+EXPOSE 443
+
 ENTRYPOINT ["./app"]

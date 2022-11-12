@@ -6,13 +6,15 @@ on:
   pull_request:
 
 permissions:
-  contents: "read"
-  id-token: "write"
+  contents: read
+  id-token: write
+  pull-requests: write
 
 env:
   TF_VAR_region: us-east1
+  TF_VAR_zone: us-east1-b
   TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
-  artifact_repository_name: container-images
+  TF_VAR_artifact_repository_name: container-images
   daily_image_name: daily
 
 jobs:
@@ -27,12 +29,11 @@ jobs:
       - name: Set environment variables for job
         run: |
           echo \
-          "TF_VAR_daily_image_url=${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.artifact_repository_name }}/${{ env.daily_image_name }}:latest" \
+          "TF_VAR_daily_image_url=${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository_name }}/${{ env.daily_image_name }}:latest" \
           >> $GITHUB_ENV
           echo "TF_VAR_revision_name=${{ env.daily_image_name }}-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Authenticate to Google Cloud
-        if: github.event_name != 'pull_request'
         uses: google-github-actions/auth@v0
         with:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
@@ -106,7 +107,7 @@ jobs:
       - name: Set environment variables for job
         run: |
           echo \
-          "repository_url=${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.artifact_repository_name }}" \
+          "repository_url=${{ env.TF_VAR_region }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.TF_VAR_artifact_repository_name }}" \
           >> $GITHUB_ENV
 
       - name: Setup Docker buildx

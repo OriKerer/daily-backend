@@ -3,7 +3,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/orikerer/daily)](https://goreportcard.com/report/github.com/orikerer/daily)
 ## Infrastructure Prerequisites
 
-Before using the terraform create the following resources
+Before running terraform make sure the following infrastructure is in place:
 ### 1. GCS bucket for terraform remote state backend
 * Follow [Store Terraform state in a Cloud Storage bucket](https://cloud.google.com/docs/terraform/resource-management/store-state)
 * Set `terraform.backend.bucket` in `providers.tf`
