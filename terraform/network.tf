@@ -5,7 +5,7 @@ resource "google_compute_network" "daily_network" {
 
 resource "google_compute_subnetwork" "daily_subnet" {
   name                     = "daily-subnet"
-  ip_cidr_range            = "10.2.0.0/16" # TODO: decide cidr block
+  ip_cidr_range            = "10.1.0.0/24"
   network                  = google_compute_network.daily_network.id
   private_ip_google_access = true
 }

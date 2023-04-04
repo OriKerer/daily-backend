@@ -4,10 +4,9 @@ module "gce_container" {
 }
 
 resource "google_compute_instance" "daily" {
-  name         = "daily"
-  machine_type = "e2-micro"
-  tags         = ["http-server", "https-server"]
-  # metadata_startup_script   = data.template_file.startup_script.rendered
+  name                      = "daily"
+  machine_type              = "e2-micro"
+  tags                      = ["http-server", "https-server"]
   allow_stopping_for_update = true
   description               = "VM to Host Daily container"
 
@@ -16,6 +15,9 @@ resource "google_compute_instance" "daily" {
       image = module.gce_container.source_image
       type  = "pd-standard"
       size  = "10"
+    }
+    labels = {
+      billing = "daily-gce-boot-disk"
     }
   }
 
@@ -62,22 +64,6 @@ resource "google_service_account" "daily_gce" {
   display_name = "Daily GCE service Account"
 }
 
-# resource "google_artifact_registry_repository_iam_member" "daily_gce_artifact_reader" {
-#   location   = data.google_artifact_registry_repository.daily_artifact_repo.location
-#   repository = data.google_artifact_registry_repository.daily_artifact_repo.name
-#   role       = "roles/artifactregistry.reader"
-#   member     = format("serviceAccount:%s", google_service_account.daily_gce.email)
-# }
-
-# resource "google_artifact_registry_repository_iam_binding" "binding" {
-#   location   = data.google_artifact_registry_repository.daily_artifact_repo.location
-#   repository = data.google_artifact_registry_repository.daily_artifact_repo.name
-#   role       = "roles/artifactregistry.reader"
-#   members = [
-#     format("serviceAccount:%s", google_service_account.daily_gce.email),
-#   ]
-# }
-
 data "google_iam_policy" "daily_gce_artifact_reader" {
   binding {
     role = "roles/artifactregistry.reader"
@@ -99,29 +85,6 @@ data "google_artifact_registry_repository" "daily_artifact_repo" {
   location      = var.region
   repository_id = var.artifact_repository_name
 }
-
-# data "template_file" "startup_script" {
-#   template = file("${path.module}/startup.sh.tpl")
-#   vars = {
-#     IMAGE          = var.daily_image_url
-#     RESTART_POLICY = module.gce-container.restart_policy
-#   }
-# }
-
-# resource "google_project_iam_policy" "daily_log_writer_policy" {
-#   project     = var.project_id
-#   policy_data = data.google_iam_policy.log_writer.policy_data
-# }
-
-# data "google_iam_policy" "log_writer" {
-#   binding {
-#     role = "roles/logging.logWriter"
-
-#     members = [
-#       format("serviceAccount:%s", google_service_account.daily_gce.email),
-#     ]
-#   }
-# }
 
 resource "google_project_iam_binding" "daily_logs_writer" {
   project = var.project_id
